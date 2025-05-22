@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Project Plan: Advanced URL Shortener</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!--
+        Chosen Palette: "Teal and Stone Harmony"
+        - Body Background: bg-stone-100
+        - Main Text: text-stone-700
+        - Headers/Navigation Background: bg-teal-700
+        - Navigation Text: text-white
+        - Card Background: bg-white
+        - Accent/Borders: border-teal-600
+        - Interactive Element Highlight: hover:bg-teal-600
+    -->
+    <!--
+        Application Structure Plan:
+        The SPA is structured with a fixed top navigation bar allowing users to switch between key sections of the project definition: Goal, Features, Architecture, Components, Docker Specifics, and Development Plan. Each section's content is displayed in a main content area below the navigation.
+        - The "Architecture Sketch" will be a visual representation using HTML/Tailwind CSS to mimic the provided Mermaid diagram.
+        - The "Component Breakdown" will use an accordion-style layout for each component, allowing users to expand and collapse details to manage information density.
+        - The "Development Plan" will be presented as a clear, numbered list.
+        This structure was chosen to provide a familiar and intuitive way to navigate a detailed document, breaking it down into manageable, focused views. It prioritizes ease of access to specific information and a clear overview of the project.
+    -->
+    <!--
+        Visualization & Content Choices:
+        - Project Title, Goal, Core Features: Presented as clear, prominent text blocks. Goal: Inform. Method: HTML text. Interaction: Static. Justification: Direct and immediate presentation of foundational project information.
+        - Architecture Sketch: Recreated as a static visual diagram using HTML divs and Tailwind CSS for styling, approximating the Mermaid diagram's structure. Goal: Understand system flow. Method: HTML/CSS block diagram. Interaction: Static visual. Justification: Provides a necessary visual overview of the system's components and their interactions, adhering to the no SVG/Mermaid constraint.
+        - Component Breakdown (5.1 - 5.10): Each component is an item in an accordion. The title is always visible, and the details (Technology, Responsibilities) are revealed on click. Goal: Detail component roles. Method: HTML structure with JS for accordion functionality. Interaction: Click to expand/collapse. Justification: Manages a large amount of detailed information effectively, preventing user overwhelm and allowing focused exploration.
+        - Docker Compose Specifics (6): Presented as a structured list within its own section. Goal: Inform technical details. Method: HTML list. Interaction: Static. Justification: Clear and concise presentation of technical specifications.
+        - Development & Testing Plan (7): Presented as an ordered list. Goal: Outline project phases. Method: HTML ordered list. Interaction: Static. Justification: Clearly presents the sequential steps of the development plan.
+        - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used.
+    -->
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .content-section { display: none; }
+        .content-section.active { display: block; }
+        /* Accordion styles */
+        .accordion-header { cursor: pointer; }
+        .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; }
+        .accordion-content.open { max-height: 1000px; /* Adjust as needed */ } /* A large enough max-height */
+        .architecture-block { border: 1px solid; padding: 0.5rem; margin: 0.25rem; text-align: center; border-radius: 0.25rem; }
+        .architecture-arrow { display: flex; align-items: center; justify-content: center; margin: 0.25rem 0; }
+        .architecture-arrow::after { content: '→'; font-size: 1.5rem; margin: 0 0.5rem; }
+    </style>
+</head>
+<body class="bg-stone-100 text-stone-700">
+
+    <header class="bg-teal-700 text-white p-6 shadow-md sticky top-0 z-50">
+        <div class="container mx-auto">
+            <h1 class="text-3xl font-bold">Project Definition: Advanced URL Shortener</h1>
+            <nav class="mt-4">
+                <ul class="flex space-x-4 overflow-x-auto pb-2">
+                    <li><button onclick="showSection('goal')" class="nav-button hover:bg-teal-600 px-3 py-2 rounded-md">Goal & Features</button></li>
+                    <li><button onclick="showSection('architecture')" class="nav-button hover:bg-teal-600 px-3 py-2 rounded-md">Architecture</button></li>
+                    <li><button onclick="showSection('components')" class="nav-button hover:bg-teal-600 px-3 py-2 rounded-md">Components</button></li>
+                    <li><button onclick="showSection('docker')" class="nav-button hover:bg-teal-600 px-3 py-2 rounded-md">Docker Specifics</button></li>
+                    <li><button onclick="showSection('devplan')" class="nav-button hover:bg-teal-600 px-3 py-2 rounded-md">Development Plan</button></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-6">
+        <section id="goal" class="content-section active">
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <h2 class="text-2xl font-semibold text-teal-700 mb-4">1. Project Title</h2>
+                <p class="mb-6 text-xl">Advanced URL Shortener with Event-Driven Analytics & Observability</p>
+
+                <h2 class="text-2xl font-semibold text-teal-700 mb-4">2. Goal</h2>
+                <p class="mb-6">To build and deploy a multi-service application locally using Docker Compose, leveraging various backend components (DB, Cache, MQ, Search/Analytics) and demonstrating advanced Docker Compose features, event-driven architecture, and comprehensive observability.</p>
+
+                <h2 class="text-2xl font-semibold text-teal-700 mb-4">3. Core Features</h2>
+                <ul class="list-disc list-inside space-y-2">
+                    <li><strong>URL Shortening:</strong> User submits a long URL, gets a short code back.</li>
+                    <li><strong>Redirection:</strong> Visiting the short code redirects to the original long URL.</li>
+                    <li><strong>Basic Analytics:</strong> Track the number of visits to each shortened URL.</li>
+                    <li><strong>Centralized Logging:</strong> Aggregate logs from all services for easy searching and debugging.</li>
+                    <li><strong>Event-Driven Processing:</strong> Decouple URL operations from analytics processing via a message broker.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="architecture" class="content-section">
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <h2 class="text-2xl font-semibold text-teal-700 mb-4">4. High-Level Architecture Sketch</h2>
+                <p class="mb-4 text-sm text-stone-600">This is a simplified visual representation of the system architecture. Arrows indicate data flow or interaction.</p>
+                <div class="border border-teal-500 p-4 rounded-lg bg-stone-50">
+                    <div class="architecture-block bg-pink-100 border-pink-500">Client Browser</div>
+                    <div class="architecture-arrow"></div>
+                    <div class="architecture-block bg-purple-100 border-purple-500">NGINX Proxy/LB (Port 80)</div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                        <div class="border border-dashed border-teal-400 p-2 rounded">
+                            <h3 class="font-semibold text-center text-teal-600 mb-2">Frontend Tier</h3>
+                            <div class="architecture-arrow transform rotate-90 md:rotate-0"></div>
+                            <div class="architecture-block bg-green-100 border-green-500">Frontend Service (Static Content)</div>
+                        </div>
+
+                        <div class="border border-dashed border-teal-400 p-2 rounded">
+                            <h3 class="font-semibold text-center text-teal-600 mb-2">API & Event Tier</h3>
+                            <div class="architecture-arrow transform rotate-90 md:rotate-0"></div>
+                            <div class="architecture-block bg-blue-100 border-blue-500">Backend API (Scaled)</div>
+                            <div class="architecture-arrow transform rotate-90 md:rotate-0"></div>
+                            <div class="architecture-block bg-pink-100 border-pink-500">RabbitMQ Message Broker</div>
+                        </div>
+
+                        <div class="border border-dashed border-teal-400 p-2 rounded">
+                             <h3 class="font-semibold text-center text-teal-600 mb-2">Data & Analytics Tier</h3>
+                            <div class="flex flex-col items-center">
+                                <div class="architecture-block bg-lime-100 border-lime-500">PostgreSQL DB</div>
+                                <div class="architecture-block bg-lime-100 border-lime-500 mt-2">Redis Cache</div>
+                                <div class="architecture-arrow transform rotate-90"></div>
+                                <div class="architecture-block bg-blue-100 border-blue-500">Analytics Worker</div>
+                                <div class="architecture-arrow transform rotate-90"></div>
+                                <div class="architecture-block bg-orange-100 border-orange-500">Elasticsearch</div>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="border border-dashed border-teal-400 p-2 rounded mt-4">
+                        <h3 class="font-semibold text-center text-teal-600 mb-2">Observability Tier</h3>
+                        <div class="flex flex-col items-center">
+                            <div class="architecture-block bg-gray-100 border-gray-500">Filebeat (Log Shipper)</div>
+                             <div class="architecture-arrow transform rotate-90"></div>
+                             <div class="architecture-block bg-orange-100 border-orange-500">Elasticsearch (Target for Logs)</div>
+                            <div class="architecture-arrow transform rotate-90"></div>
+                            <div class="architecture-block bg-gray-100 border-gray-500">Kibana (Visualize Logs/Analytics)</div>
+                        </div>
+                    </div>
+                    <p class="mt-4 text-xs text-stone-500">Note: Arrows from Backend API implicitly connect to PostgreSQL and Redis. Arrows from RabbitMQ connect to Analytics Worker. Filebeat collects from all services and sends to Elasticsearch. Kibana reads from Elasticsearch.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="components" class="content-section">
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <h2 class="text-2xl font-semibold text-teal-700 mb-4">5. Detailed Component Breakdown</h2>
+                <p class="mb-6">Click on each component to see its details.</p>
+                <div id="componentsAccordion" class="space-y-2">
+                    </div>
+            </div>
+        </section>
+
+        <section id="docker" class="content-section">
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <h2 class="text-2xl font-semibold text-teal-700 mb-4">6. Docker Compose Specifics</h2>
+                <div class="space-y-3">
+                    <div>
+                        <h3 class="text-lg font-medium text-stone-800">Custom Networks:</h3>
+                        <ul class="list-disc list-inside ml-4">
+                            <li><code>app-network</code>: For Frontend, NGINX, Backend, DB, Redis, RabbitMQ.</li>
+                            <li><code>logging-network</code>: For Elasticsearch, Kibana, Filebeat. (Filebeat will bridge both).</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-medium text-stone-800">Named Volumes:</h3>
+                        <ul class="list-disc list-inside ml-4">
+                            <li><code>db_data</code>: For PostgreSQL data.</li>
+                            <li><code>redis_data</code>: For Redis data (AOF enabled).</li>
+                            <li><code>es_data</code>: For Elasticsearch data.</li>
+                        </ul>
+                    </div>
+                    <p><strong>Health Checks:</strong> Configure <code>healthcheck</code> for all services (NGINX, Backend, DB, Redis, RabbitMQ, Elasticsearch).</p>
+                    <p><strong><code>depends_on</code> with <code>condition: service_healthy</code>:</strong> Ensure strict startup order where necessary.</p>
+                    <p><strong>Resource Limits:</strong> (Optional but good practice) Add <code>deploy.resources.limits</code> for CPU/memory.</p>
+                    <p><strong><code>.env</code> file:</strong> Externalize all sensitive data (passwords, usernames) and configurable ports.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="devplan" class="content-section">
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <h2 class="text-2xl font-semibold text-teal-700 mb-4">7. Development & Testing Plan</h2>
+                <ol class="list-decimal list-inside space-y-2">
+                    <li><strong>Project Setup:</strong> Create directory structure.</li>
+                    <li><strong>Base Dockerfiles:</strong> Create initial Dockerfiles for Backend, Frontend, and Analytics Worker.</li>
+                    <li><strong><code>docker-compose.yml</code> Draft:</strong> Lay out all services, networks, and volumes.</li>
+                    <li><strong>Database & Redis First:</strong> Get PostgreSQL and Redis running correctly with persistence.</li>
+                    <li><strong>RabbitMQ Setup:</strong> Get RabbitMQ running and verify management UI.</li>
+                    <li><strong>Backend MVP:</strong> Implement basic URL shorten/redirect endpoints in Backend, initially without Redis/MQ integration, just DB. Test directly.</li>
+                    <li><strong>Integrate Redis:</strong> Add Redis caching to Backend.</li>
+                    <li><strong>Integrate RabbitMQ (Backend & Worker):</strong>
+                        <ul class="list-disc list-inside ml-6">
+                            <li>Backend publishes events.</li>
+                            <li>Analytics Worker consumes and logs events.</li>
+                            <li>Verify message flow in RabbitMQ management UI.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Elasticsearch & Kibana:</strong> Get ES/Kibana running. Test connectivity.</li>
+                    <li><strong>Integrate Analytics Worker with Elasticsearch:</strong> Worker consumes events and pushes to ES. Verify data in Kibana Discover.</li>
+                    <li><strong>Implement Backend Analytics Endpoint:</strong> Backend queries ES.</li>
+                    <li><strong>Frontend & NGINX:</strong>
+                        <ul class="list-disc list-inside ml-6">
+                            <li>Implement basic HTML/JS frontend.</li>
+                            <li>Configure NGINX for static serving and API routing.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Filebeat & Logging:</strong> Configure Filebeat to collect logs from all containers and send to ES. Verify logs in Kibana.</li>
+                    <li><strong>Refine & Test:</strong> Thoroughly test all endpoints, check logs, verify analytics, and ensure health checks are robust.</li>
+                </ol>
+            </div>
+        </section>
+    </main>
+
+    <footer class="text-center p-4 text-sm text-stone-500 mt-8">
+        Interactive Project Plan SPA | Generated on <span id="generationDate"></span>
+    </footer>
+
+    <script>
+        // Data for components
+        const componentsData = [
+            {
+                title: "5.1 Frontend (NGINX + Static SPA/HTML)",
+                technology: "NGINX (`nginx:alpine` or `nginx:stable-alpine`) serving a simple HTML file with basic JavaScript for form submission.",
+                responsibilities: [
+                    "Serve `index.html` and any static assets (CSS/JS).",
+                    "Display a form to input a long URL.",
+                    "Display the shortened URL received from the backend.",
+                    "(Optional): Display a simple form/link to view analytics for a short code."
+                ]
+            },
+            {
+                title: "5.2 API Gateway / Reverse Proxy (NGINX)",
+                technology: "NGINX (`nginx:alpine` or `nginx:stable-alpine`) with custom `nginx.conf`.",
+                responsibilities: [
+                    "Listen on host port 80.",
+                    "Route `/api/v1/shorten` to `backend` service.",
+                    "Route `/api/v1/stats/<short_code>` to `backend` service.",
+                    "Route `/<short_code>` (e.g., `/abcde`) directly to `backend` service for redirection.",
+                    "Route default `/` and other static paths to `frontend` service."
+                ]
+            },
+            {
+                title: "5.3 Backend API (Scaled - e.g., Python Flask/FastAPI)",
+                technology: "Python (`python:3.9-slim`), Flask/FastAPI, `psycopg2-binary`, `redis-py`, `pika` (for RabbitMQ).",
+                responsibilities: [
+                    "**/api/v1/shorten Endpoint (POST):** Accept `long_url`, generate unique `short_code`, store in PostgreSQL, cache in Redis, publish `url_shortened` event to RabbitMQ, return `short_code`.",
+                    "**/<short_code> Endpoint (GET):** Lookup `long_url` (Redis then PostgreSQL), perform HTTP 302 Redirect, publish `url_visited` event to RabbitMQ.",
+                    "**/api/v1/stats/<short_code> Endpoint (GET):** Query Elasticsearch for visit stats, return aggregated data.",
+                    "**/_health Endpoint (GET):** Health check for DB, Redis, RabbitMQ connectivity.",
+                    "**Scaling:** Configured for `replicas: 3` in Docker Compose.",
+                    "**Logging:** Output structured JSON logs."
+                ]
+            },
+            {
+                title: "5.4 Database (PostgreSQL)",
+                technology: "`postgres:14`.",
+                responsibilities: [
+                    "Persistent storage for `short_code` to `long_url` mappings.",
+                    "Initial schema: `CREATE TABLE url_mappings (id SERIAL PRIMARY KEY, short_code VARCHAR(10) UNIQUE NOT NULL, long_url TEXT NOT NULL, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);`"
+                ]
+            },
+            {
+                title: "5.5 Cache (Redis)",
+                technology: "`redis:6-alpine`.",
+                responsibilities: [
+                    "In-memory cache for `short_code` to `long_url` lookups (TTL-based).",
+                    "(Optional): Could implement simple rate-limiting counters for API calls."
+                ]
+            },
+            {
+                title: "5.6 Message Broker (RabbitMQ)",
+                technology: "`rabbitmq:3-management-alpine`.",
+                responsibilities: [
+                    "Receive `url_shortened` and `url_visited` events from Backend API.",
+                    "Route messages to appropriate queues for Analytics Worker.",
+                    "**Configuration:** `url_events_exchange` (type: `topic`), `shortened_urls_queue` (binds to `url.shortened`), `visited_urls_queue` (binds to `url.visited`), Dead-letter exchange/queue."
+                ]
+            },
+            {
+                title: "5.7 Analytics Worker",
+                technology: "Python (`python:3.9-slim`), `pika`, `elasticsearch-py`.",
+                responsibilities: [
+                    "Consume messages from `shortened_urls_queue` and `visited_urls_queue` on RabbitMQ.",
+                    "Process `url_visited` events: Index into Elasticsearch `url_visits_<yyyy.mm.dd>` index.",
+                    "Process `url_shortened` events: Index into Elasticsearch `short_url_metadata` index.",
+                    "Robust error handling for message processing and Elasticsearch indexing.",
+                    "**Logging:** Output structured JSON logs."
+                ]
+            },
+            {
+                title: "5.8 Search/Analytics Store (Elasticsearch)",
+                technology: "`elasticsearch:8.x.x`.",
+                responsibilities: [
+                    "Store time-series visit data (`url_visits_<yyyy.mm.dd>`).",
+                    "Store static URL metadata (`short_url_metadata`).",
+                    "Enable full-text search and aggregations for analytics queries."
+                ]
+            },
+            {
+                title: "5.9 Analytics Visualization (Kibana)",
+                technology: "`kibana:8.x.x`.",
+                responsibilities: [
+                    "Provide a web UI for exploring data in Elasticsearch.",
+                    "Create dashboards for URL visit trends, top URLs, etc.",
+                    "Visualize data from both `url_visits` and `short_url_metadata` indices."
+                ]
+            },
+            {
+                title: "5.10 Logging Aggregation (Filebeat)",
+                technology: "`docker.elastic.co/beats/filebeat:8.x.x`.",
+                responsibilities: [
+                    "Collect structured (JSON) logs from all other Docker containers.",
+                    "Enrich logs with Docker metadata (container name, ID).",
+                    "Send collected logs to Elasticsearch."
+                ]
+            }
+        ];
+
+        // Function to show a specific section and hide others
+        function showSection(sectionId) {
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(section => {
+                if (section.id === sectionId) {
+                    section.classList.add('active');
+                } else {
+                    section.classList.remove('active');
+                }
+            });
+            // Update active button style
+            const navButtons = document.querySelectorAll('.nav-button');
+            navButtons.forEach(button => {
+                if (button.textContent.toLowerCase().includes(sectionId.substring(0,3))) { // Simple match
+                     button.classList.add('bg-teal-800', 'font-semibold');
+                     button.classList.remove('hover:bg-teal-600');
+                } else {
+                    button.classList.remove('bg-teal-800', 'font-semibold');
+                    button.classList.add('hover:bg-teal-600');
+                }
+            });
+            // Scroll to top of content for better UX on mobile
+            window.scrollTo(0, 0);
+        }
+
+        // Accordion functionality
+        function setupAccordion() {
+            const accordionContainer = document.getElementById('componentsAccordion');
+            componentsData.forEach((item, index) => {
+                const itemDiv = document.createElement('div');
+                itemDiv.classList.add('border', 'border-teal-500', 'rounded-md');
+
+                const header = document.createElement('div');
+                header.classList.add('accordion-header', 'bg-teal-50', 'p-4', 'flex', 'justify-between', 'items-center', 'hover:bg-teal-100', 'transition-colors');
+                header.innerHTML = `<h3 class="text-lg font-medium text-teal-700">${item.title}</h3>
+                                    <span class="transform transition-transform duration-300 text-teal-700">&#9660;</span>`; // Down arrow
+
+                const content = document.createElement('div');
+                content.classList.add('accordion-content', 'p-4', 'border-t', 'border-teal-200');
+
+                const techP = document.createElement('p');
+                techP.classList.add('mb-3');
+                techP.innerHTML = `<strong>Technology:</strong> ${item.technology}`;
+                content.appendChild(techP);
+
+                const responsibilitiesH = document.createElement('h4');
+                responsibilitiesH.classList.add('font-semibold', 'mb-1', 'text-stone-800');
+                responsibilitiesH.textContent = 'Responsibilities:';
+                content.appendChild(responsibilitiesH);
+
+                const responsibilitiesUl = document.createElement('ul');
+                responsibilitiesUl.classList.add('list-disc', 'list-inside', 'space-y-1', 'ml-4');
+                item.responsibilities.forEach(resp => {
+                    const li = document.createElement('li');
+                    li.innerHTML = resp.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>'); // Basic bolding for emphasis
+                    responsibilitiesUl.appendChild(li);
+                });
+                content.appendChild(responsibilitiesUl);
+
+                header.addEventListener('click', () => {
+                    const currentlyOpen = document.querySelector('.accordion-content.open');
+                    if (currentlyOpen && currentlyOpen !== content) {
+                        currentlyOpen.classList.remove('open');
+                        currentlyOpen.previousElementSibling.querySelector('span').style.transform = 'rotate(0deg)';
+                    }
+                    content.classList.toggle('open');
+                    header.querySelector('span').style.transform = content.classList.contains('open') ? 'rotate(180deg)' : 'rotate(0deg)';
+                });
+
+                itemDiv.appendChild(header);
+                itemDiv.appendChild(content);
+                accordionContainer.appendChild(itemDiv);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set initial active nav button
+            const initialNavButton = document.querySelector('.nav-button');
+            if(initialNavButton) {
+                initialNavButton.classList.add('bg-teal-800', 'font-semibold');
+                initialNavButton.classList.remove('hover:bg-teal-600');
+            }
+
+            setupAccordion();
+            document.getElementById('generationDate').textContent = new Date().toLocaleDateString();
+        });
+    </script>
+</body>
+</html>
