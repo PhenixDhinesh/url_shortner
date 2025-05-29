@@ -5,7 +5,7 @@ from sqlalchemy.exc import IntegrityError
 from flask import request, redirect, jsonify, current_app
 
 from models import URLMapping
-from extensions import db
+from extensions import db, redis_helper
 from utils import generate_short_code
 
 from . import api_bp
@@ -38,6 +38,10 @@ def shorten_url():
             db.session.commit()
             logger.info("URL Shortened: %s -> %s", long_url, short_code)
             full_short_url = f"{current_app.config['BASE_URL']}/{short_code}"
+
+            # set code and redirect url to redis
+            redis_helper.set_value(short_code, long_url, current_app.config['REDIS_TTL_IN_MIN'])
+
             return jsonify({"short_url": full_short_url, "short_code": short_code}), 201
         except IntegrityError:
             db.session.rollback() # Rollback if short_code collision
@@ -57,9 +61,17 @@ def redirect_to_long_url(short_code):
     """
     Endpoint to redirect a short code to its original long URL.
     """
+    # lookup in redis
+    long_url = redis_helper.get_string(short_code)
+    if long_url:
+        logger.info("Redirecting %s to %s", short_code, long_url)
+        return redirect(long_url, code=302)
+
+    # fallback to database
     url_mapping = URLMapping.query.filter_by(short_code=short_code).first()
 
     if url_mapping:
+        redis_helper.set_value(short_code, url_mapping.long_url, current_app.config['REDIS_TTL_IN_MIN'])
         logger.info("Redirecting %s to %s", short_code, url_mapping.long_url)
         return redirect(url_mapping.long_url, code=302)
     else:

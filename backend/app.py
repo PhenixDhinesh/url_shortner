@@ -4,6 +4,8 @@ import logging
 from flask import Flask
 from flask_cors import CORS
 
+from redis import Redis
+
 from config import config_by_name
 from extensions import db, migrate
 
@@ -38,6 +40,14 @@ def create_app(config_name=None):
 
     app.logger.info("App created with `%s` configuration.", config_name)
     app.logger.info("Base URL: %s", app.config['BASE_URL'])
+
+    # initialize Redis
+    app.logger.info("Redis URL: %s", app.config['REDIS_URL'])
+    app.redis = Redis.from_url(app.config['REDIS_URL'])
+
+    # Initialize extensions
+    from extensions import init_extensions
+    init_extensions(app)
 
     return app
 

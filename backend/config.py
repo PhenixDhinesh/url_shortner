@@ -14,9 +14,12 @@ class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY', 'a_default_secret_key_for_dev')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     BASE_URL = os.environ.get('BASE_URL', 'http://localhost:5000')
+    REDIS_URL = os.environ.get('REDIS_URL', 'redis://localhost:6379/0')
     CORS_ORIGINS = [
         'http://localhost:3000',
     ]
+
+    REDIS_TTL_IN_MIN = 5
 
 
 class DevelopmentConfig(Config):
@@ -28,7 +31,7 @@ class DevelopmentConfig(Config):
     # Format: postgresql://user:password@host:port/database_name
     SQLALCHEMY_DATABASE_URI = os.environ.get('SQLALCHEMY_DATABASE_URI')
     # Log all SQL queries in debug mode
-    # SQLALCHEMY_ECHO = True
+    SQLALCHEMY_ECHO = True
 
 
 class ProductionConfig(Config):
