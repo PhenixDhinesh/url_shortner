@@ -2,6 +2,7 @@ import os
 import logging
 
 from flask import Flask
+from flask_cors import CORS
 
 from config import config_by_name
 from extensions import db, migrate
@@ -21,6 +22,10 @@ def create_app(config_name=None):
     # Initialize extensions
     db.init_app(app)
     migrate.init_app(app, db)
+
+    # add CORS
+    app.logger.info("CORS resources: %s", app.config['CORS_ORIGINS'])
+    CORS(app, origins=app.config['CORS_ORIGINS'], supports_credentials=True)
 
     # Register blueprints
     app.register_blueprint(api_bp)
